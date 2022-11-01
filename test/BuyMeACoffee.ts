@@ -1,6 +1,6 @@
-const { deployments, ethers, getNamedAccounts } = require('hardhat');
-const { expect } = require('chai');
-const BigNumber = require('bn.js')
+import { deployments, ethers, getNamedAccounts } from 'hardhat';
+import { expect } from 'chai';
+import { BigNumber } from 'ethers';
 
 const setupTest = deployments.createFixture(
     async ({ deployments, getNamedAccounts, ethers }, options) => {

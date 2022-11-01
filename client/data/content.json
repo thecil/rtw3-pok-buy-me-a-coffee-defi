@@ -1,0 +1,30 @@
+{
+    "meta": {
+        "title": "Alchemy - Buy me a Coffee Challenge"
+      },
+    "content": {
+        "info": {
+            "infoLinks": {
+              "followText": "Follow & join our socials FOR MORE INFORMATION",
+              "followSocials": [
+                {
+                  "LinkText": "Twitter",
+                  "LinkIcon": "/icons/twitter.svg",
+                  "LinkHref": "https://twitter.com/thecil_eth"
+                },
+                {
+                  "LinkText": "Github",
+                  "LinkIcon": "/icons/github.svg",
+                  "LinkHref": "https://github.com/thecil/"
+                },
+
+                {
+                  "LinkText": "linkedin",
+                  "LinkIcon": "/icons/linkedin.svg",
+                  "LinkHref": "https://www.linkedin.com/in/carlos-zambrano-6257b2184/"
+                }                    
+              ]
+            }
+        }
+    }
+}
