@@ -2,10 +2,13 @@ import { Container, Row, Col, Image } from "react-bootstrap";
 import { SocialMedia } from "../social/SocialMedia";
 import { ConnectBtn } from "../main/ConnectBtn";
 import { Memo } from "../main/Memo";
+import { useContract } from "../main/useContract";
 
-type MyComponentProps = React.PropsWithChildren<{ }>;
+type MyComponentProps = React.PropsWithChildren<{}>;
 
-export default function MainContainer({ children } : MyComponentProps) {
+export default function MainContainer({ children }: MyComponentProps) {
+  const { getMemos } = useContract();
+
   return (
     <div className="m-8 container absolute">
       <Container>
@@ -32,7 +35,7 @@ export default function MainContainer({ children } : MyComponentProps) {
             <>{children}</>
           </Col>
         </Row>
-        <Memo />
+        <Memo memosIds={getMemos as unknown as [] || []} />
       </Container>
     </div>
   );

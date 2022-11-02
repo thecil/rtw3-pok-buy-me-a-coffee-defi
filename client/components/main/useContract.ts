@@ -17,16 +17,12 @@ export const useContract = () => {
     const [senderMessage, setSenderMessage] = useState("Enjoy your coffee!");
     const [tipAmount, setTipAmount] = useState("0.001");
 
-    const { data: _getMemos, refetch: fetchMemos } = useContractRead({
+    const { data: getMemos, refetch: fetchMemos } = useContractRead({
         ...contractInterface,
         functionName: "getMemos",
         cacheTime: Infinity,
         enabled: false
     });
-
-    const getMemos = useMemo(() => {
-        return _getMemos;
-    }, [_getMemos]);
 
     useEffect(() => {
         if (isConnected) fetchMemos();
