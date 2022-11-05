@@ -33,7 +33,7 @@ Dapp is made with NextJs using rainbowkit and wagmi.
 <img src="https://img.shields.io/badge/Typescript-05122A?style=flat&logo=typescript" alt="typescript Badge" height="25">&nbsp;
 
 ## Verified Smart Contract 
-  <a href="https://goerli.etherscan.io/address/0x5f4145478c910e7a3a3e39ffad39fcc38c89cf18" target="_blank">Alchemy ALCH</a>
+  <a href="https://goerli.etherscan.io/address/0x28cd3D2d2f00f4EE0ea2450756e6b6102a598F3c#code" target="_blank">BuyMeACoffee</a>
 ## Installation
 To Install this project, follow the steps above:
 ```bash

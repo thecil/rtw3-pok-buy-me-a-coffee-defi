@@ -41,11 +41,7 @@ const MainController: React.FC = () => {
         break;
 
       case UiStages.connect:
-        return (
-          <div className="py-36">
-            <h1>Please Connect a Wallet first</h1>
-          </div>
-        );
+        return <h1>Please Connect a Wallet first</h1>;
 
       case UiStages.tipping:
         return <TipsForm onTipSuccess={onTipSuccess} />;

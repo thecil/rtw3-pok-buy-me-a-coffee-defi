@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Form, Row, Col, InputGroup } from "react-bootstrap";
 import { ButtonPrimary } from "../button/ButtonPrimary";
 import { useContract } from "./useContract";
-import Link from "next/link";
 import { Modal } from "../modal/Modal";
 
 export interface TipsFormProps {
@@ -154,30 +153,7 @@ export const TipsForm: React.FC<TipsFormProps> = ({ onTipSuccess }) => {
               />
             </div>
           </Col>
-          <Col className="mt-3">
-            <h3>Read more about this project:</h3>
-            <Link href="https://docs.alchemy.com/docs/how-to-build-buy-me-a-coffee-defi-dapp#build-the-frontend-buy-me-a-coffee-website-dapp-with-replit-and-ethersjs">
-              <a target="_blank" className="text-blue-400 text-sm">
-                How to Build "Buy Me a Coffee" DeFi dapp
-              </a>
-            </Link>
-          </Col>
 
-          <Col className="">
-            <Link href="">
-              <a target="_blank" className="text-blue-400 text-sm">
-                Goerli Verified Contract
-              </a>
-            </Link>
-          </Col>
-
-          <Col className="">
-            <Link href="https://github.com/thecil/rtw3-pok-buy-me-a-coffee-defi">
-              <a target="_blank" className="text-blue-400 text-sm">
-                GitHub Repo
-              </a>
-            </Link>
-          </Col>
         </Row>
       </Form>
     </div>

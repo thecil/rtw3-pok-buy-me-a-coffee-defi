@@ -2,6 +2,7 @@ import { Container, Row, Col, Image } from "react-bootstrap";
 import { SocialMedia } from "../social/SocialMedia";
 import { ConnectBtn } from "../main/ConnectBtn";
 import { Memo } from "../main/Memo";
+import { ProjectLinks } from "../social/ProjectLinks";
 
 type MyComponentProps = React.PropsWithChildren<{}>;
 
@@ -29,9 +30,11 @@ export default function MainContainer({ children }: MyComponentProps) {
             <SocialMedia />
           </Col>
           {/* RIGHT SIDE */}
-          <Col md={6} className="px-24 py-5 text-left">
+          <Col md={6} className="grid content-center px-24 py-5 text-left">
             <>{children}</>
+            <ProjectLinks />
           </Col>
+          
         </Row>
         <Memo />
       </Container>
