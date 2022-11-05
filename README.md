@@ -8,7 +8,7 @@
 
 <h3 align="center">
 	Deployed at: 
-    <a href="https://rtw3-pok-erc721.vercel.app/" target="_blank">rtw3-pok-erc721.vercel.app</a>&nbsp;
+    <a href="https://rtw3-pok-buy-me-a-coffee-defi.vercel.app/" target="_blank">rtw3-pok-buy-me-a-coffee-defi.vercel.app</a>&nbsp;
 </h3>
 
 <h4 align="center">
