@@ -5,7 +5,7 @@ import {
     useContractWrite,
     usePrepareContractWrite
 } from "wagmi";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useContractInfo } from "../../hooks/useContractInfo";
 
 export const useContract = () => {
@@ -17,12 +17,18 @@ export const useContract = () => {
     const [senderMessage, setSenderMessage] = useState("Enjoy your coffee!");
     const [tipAmount, setTipAmount] = useState("0.001");
 
-    const { data: getMemos, refetch: fetchMemos } = useContractRead({
+    const { data: memos, refetch: fetchMemos, isRefetching } = useContractRead({
         ...contractInterface,
         functionName: "getMemos",
         cacheTime: Infinity,
-        enabled: false
+        enabled: false,
+        watch: true,
     });
+
+    const getMemos = useMemo(() => {
+        const result = memos as unknown as any[];
+        return result;
+    }, [memos]);
 
     useEffect(() => {
         if (isConnected) fetchMemos();
@@ -47,6 +53,8 @@ export const useContract = () => {
     return {
         buyCoffee,
         getMemos,
+        fetchMemos,
+        isRefetching,
         senderName,
         senderMessage,
         tipAmount,

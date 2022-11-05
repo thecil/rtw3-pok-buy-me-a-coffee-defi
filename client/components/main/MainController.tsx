@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useContractInfo } from "../../hooks/useContractInfo";
 import { useAccount } from "wagmi";
 import Layout from "../layout/Layout";
 import MainContainer from "../container/MainContainer";
@@ -11,7 +10,7 @@ const UiStages = {
   error: -1,
   loading: 0,
   connect: 1,
-  mint: 2,
+  tipping: 2,
 };
 
 const MainController: React.FC = () => {
@@ -28,7 +27,7 @@ const MainController: React.FC = () => {
   useEffect(() => {
     if (!isConnected) setStage(UiStages.connect);
     if (isConnected) {
-      setStage(UiStages.mint);
+      setStage(UiStages.tipping);
     }
   }, [isConnected]);
 
@@ -48,7 +47,7 @@ const MainController: React.FC = () => {
           </div>
         );
 
-      case UiStages.mint:
+      case UiStages.tipping:
         return <TipsForm onTipSuccess={onTipSuccess} />;
 
       default:

@@ -12,7 +12,7 @@ export const ButtonPrimary: React.FC<PrimaryButtonProps> = ({
 }) => {
   return (
     <button
-      className={disabled ? `disabled` : `text-white bg-green-400 rounded px-2 w-24 self-center hover:bg-green-600`}
+      className={disabled ? `disabled` : `text-neutral-200 bg-green-500 rounded px-2 w-24 self-center hover:bg-green-800`}
       disabled={disabled}
       {...props}
     >

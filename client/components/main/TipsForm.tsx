@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import React, { useState } from "react";
-import { Form, Row, Col, Image, InputGroup } from "react-bootstrap";
+import { Form, Row, Col, InputGroup } from "react-bootstrap";
 import { ButtonPrimary } from "../button/ButtonPrimary";
 import { useContract } from "./useContract";
 import Link from "next/link";
@@ -14,13 +14,13 @@ export interface TipsFormProps {
 export const TipsForm: React.FC<TipsFormProps> = ({ onTipSuccess }) => {
   const {
     buyCoffee,
-    getMemos,
     senderName,
     senderMessage,
     tipAmount,
     setSenderName,
     setSenderMessage,
     setTipAmount,
+    fetchMemos,
   } = useContract();
 
   const [tipingInProgress, setTipingInProgress] = useState(false);
@@ -62,6 +62,7 @@ export const TipsForm: React.FC<TipsFormProps> = ({ onTipSuccess }) => {
       if (status && typeof onTipSuccess === "function") {
         const url = `https://goerli.etherscan.io/tx/${hash}`;
         onTipSuccess(url);
+        fetchMemos();
       } else {
         toast.error("Tip transaction failed");
       }
@@ -145,7 +146,7 @@ export const TipsForm: React.FC<TipsFormProps> = ({ onTipSuccess }) => {
                   />
                 </InputGroup>
               </fieldset>
-              {[senderName, senderMessage]}
+
               <ButtonPrimary
                 type="submit"
                 text={tipingInProgress ? "Processing..." : "Tip Me"}
@@ -158,6 +159,22 @@ export const TipsForm: React.FC<TipsFormProps> = ({ onTipSuccess }) => {
             <Link href="https://docs.alchemy.com/docs/how-to-build-buy-me-a-coffee-defi-dapp#build-the-frontend-buy-me-a-coffee-website-dapp-with-replit-and-ethersjs">
               <a target="_blank" className="text-blue-400 text-sm">
                 How to Build "Buy Me a Coffee" DeFi dapp
+              </a>
+            </Link>
+          </Col>
+
+          <Col className="">
+            <Link href="">
+              <a target="_blank" className="text-blue-400 text-sm">
+                Goerli Verified Contract
+              </a>
+            </Link>
+          </Col>
+
+          <Col className="">
+            <Link href="https://github.com/thecil/rtw3-pok-buy-me-a-coffee-defi">
+              <a target="_blank" className="text-blue-400 text-sm">
+                GitHub Repo
               </a>
             </Link>
           </Col>

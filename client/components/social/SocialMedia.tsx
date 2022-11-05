@@ -26,7 +26,7 @@ export const SocialMedia: React.FC = () => {
     <div className="flex space-x-1 m-4 items-center">
       {followSocials.map((item: any, i: any) => (
         <Link href={item.LinkHref} key={i}>
-          <a>
+          <a target="_blank">
             <Image
               className="m-2"
               key={i}
