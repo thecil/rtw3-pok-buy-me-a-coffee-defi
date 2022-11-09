@@ -33,9 +33,17 @@ describe('BuyMeACoffee', () => {
 
     interface Balances {
         inEther: string,
-        inBN: typeof BigNumber
+        inBN: BigNumber
     }
-    
+
+    interface GetBalances {
+        deployer: Balances,
+        contract: Balances,
+        tipper: Balances,
+        tipper2: Balances,
+        tipper3: Balances
+    }
+
     // Returns the Ether balance of a given address.
     const getBalance = async (address: string): Promise<Balances> => {
         const balanceBigInt = await ethers.provider.getBalance(address);
@@ -44,7 +52,7 @@ describe('BuyMeACoffee', () => {
             inBN: balanceBigInt
         };
     }
-    
+
     const tip = { value: ethers.utils.parseEther("1") };
 
     it('1. Check balances before the coffee purchase.', async () => {
@@ -69,7 +77,7 @@ describe('BuyMeACoffee', () => {
         const { tokenOwner } = await setupTest();
         const { deployer, tipper, tipper2, tipper3 } = await getNamedAccounts();
 
-        const getBalances = async () => {
+        const getBalances = async ():Promise<GetBalances> => {
             return {
                 deployer: await getBalance(deployer),
                 contract: await getBalance(tokenOwner.BuyMeACoffee.address),
@@ -90,7 +98,7 @@ describe('BuyMeACoffee', () => {
         await tokenOwner.BuyMeACoffee.connect(signers.tipper2).buyCoffee("Vitto", "Amazing teacher", tip);
         await tokenOwner.BuyMeACoffee.connect(signers.tipper3).buyCoffee("Kay", "I love my Proof of Knowledge", tip);
 
-        const newBalances = await getBalances();
+        const newBalances = await getBalances() as any;
 
         for (const [k, v] of Object.entries(beforeBalances)) {
             expect(v.inBN).to.be.equal(newBalances[k].inBN.add(v.inBN.sub(newBalances[k].inBN)))
@@ -102,7 +110,7 @@ describe('BuyMeACoffee', () => {
         const { tokenOwner } = await setupTest();
         const { deployer, tipper, tipper2, tipper3 } = await getNamedAccounts();
 
-        const getBalances = async () => {
+        const getBalances = async ():Promise<GetBalances> => {
             return {
                 deployer: await getBalance(deployer),
                 contract: await getBalance(tokenOwner.BuyMeACoffee.address),
@@ -124,7 +132,7 @@ describe('BuyMeACoffee', () => {
         await tokenOwner.BuyMeACoffee.connect(signers.tipper2).buyCoffee("Vitto", "Amazing teacher", tip);
         await tokenOwner.BuyMeACoffee.connect(signers.tipper3).buyCoffee("Kay", "I love my Proof of Knowledge", tip);
 
-        const afterBalances = await getBalances();
+        const afterBalances = await getBalances() as any;
         // console.log('after tips', afterBalances);
 
         for (const [k, v] of Object.entries(beforeBalances)) {
@@ -133,7 +141,7 @@ describe('BuyMeACoffee', () => {
 
         await tokenOwner.BuyMeACoffee.withdrawTips();
 
-        const withDrawBalances = await getBalances();
+        const withDrawBalances = await getBalances() as any;
         // console.log('after withdraw tips', withDrawBalances);
 
         for (const [k, v] of Object.entries(afterBalances)) {
@@ -151,11 +159,14 @@ describe('BuyMeACoffee', () => {
             tipper3: await ethers.getSigner(tipper3)
         }
 
-        await tokenOwner.BuyMeACoffee.connect(signers.tipper).buyCoffee("Carolina", "You're the best!", tip);
-        await tokenOwner.BuyMeACoffee.connect(signers.tipper2).buyCoffee("Vitto", "Amazing teacher", tip);
-        await tokenOwner.BuyMeACoffee.connect(signers.tipper3).buyCoffee("Kay", "I love my Proof of Knowledge", tip);
+        await tokenOwner.BuyMeACoffee.connect(signers.tipper)
+            .buyCoffee("Carolina", "You're the best!", tip);
+        await tokenOwner.BuyMeACoffee.connect(signers.tipper2)
+            .buyCoffee("Vitto", "Amazing teacher", tip);
+        await tokenOwner.BuyMeACoffee.connect(signers.tipper3)
+            .buyCoffee("Kay", "I love my Proof of Knowledge", tip);
 
-        
+
         const memos = await tokenOwner.BuyMeACoffee.getMemos();
         expect(memos.length).to.be.equal(3);
         expect(memos[0].message).to.be.equal("You're the best!");
@@ -163,6 +174,16 @@ describe('BuyMeACoffee', () => {
         expect(memos[2].message).to.be.equal("I love my Proof of Knowledge");
 
         // console.log('memos', memos)
+    });
+
+    it('5. Should change owner.', async () => {
+        const { tokenOwner } = await setupTest();
+        const { tipper, tipper2, tipper3 } = await getNamedAccounts();
+
+        await tokenOwner.BuyMeACoffee.updateWithdrawAddress(tipper);
+
+        const newOwner = await tokenOwner.BuyMeACoffee.callStatic.owner();
+        expect(newOwner).to.be.equal(tipper);
     });
 
 });

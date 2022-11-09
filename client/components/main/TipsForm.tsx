@@ -1,18 +1,25 @@
 import { toast } from "react-toastify";
-import React, { useState } from "react";
-import { Form, Row, Col, InputGroup } from "react-bootstrap";
-import { ButtonPrimary } from "../button/ButtonPrimary";
+import React, { useState, useEffect, useMemo } from "react";
+import { Form, Row, Col, InputGroup, Image } from "react-bootstrap";
 import { useContract } from "./useContract";
 import { Modal } from "../modal/Modal";
+import { ethers } from "ethers";
 
 export interface TipsFormProps {
   // eslint-disable-next-line no-unused-vars
   onTipSuccess: (transactionUrl: string) => void;
 }
 
+const uiStages = {
+  processing: 0,
+  normal: 1,
+  large: 2,
+};
+
 export const TipsForm: React.FC<TipsFormProps> = ({ onTipSuccess }) => {
   const {
     buyCoffee,
+    buyLargeCoffee,
     senderName,
     senderMessage,
     tipAmount,
@@ -21,21 +28,96 @@ export const TipsForm: React.FC<TipsFormProps> = ({ onTipSuccess }) => {
     setTipAmount,
     fetchMemos,
   } = useContract();
-
+  const [stage, setStage] = useState(uiStages.normal);
   const [tipingInProgress, setTipingInProgress] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    if (tipingInProgress) {
+      setStage(uiStages.processing);
+      return;
+    }
+
+    if (
+      ethers.utils.parseEther(tipAmount) >= ethers.utils.parseEther("0.003")
+    ) {
+      setStage(uiStages.large);
+      return;
+    }
+    if (ethers.utils.parseEther(tipAmount) < ethers.utils.parseEther("0.003")) {
+      setStage(uiStages.normal);
+      return;
+    }
+  }, [tipAmount, tipingInProgress]);
+
+  const buttonsContent = useMemo(() => {
+    switch (stage) {
+      case uiStages.processing:
+        return (
+          <button
+            disabled
+            className={
+              "cursor-pointer text-neutral-200 bg-neutral-500 rounded px-2 w-max self-center"
+            }
+          >
+            Processing...
+          </button>
+        );
+      case uiStages.normal:
+        return (
+          <button
+            type="submit"
+            className={
+              "cursor-pointer text-neutral-200 bg-green-500 rounded px-2 w-max self-center hover:bg-green-800"
+            }
+          >
+            <div className="flex space-x-1 items-center">
+              <Image
+                className="my-1 w-6"
+                src="/icons/coffee-cup.svg"
+                alt="join"
+              />
+              <p>Normal Coffee</p>
+            </div>
+          </button>
+        );
+      case uiStages.large:
+        return (
+          <button
+            type="submit"
+            className={
+              "cursor-pointer text-neutral-200 bg-green-500 rounded px-2 w-max self-center hover:bg-green-800"
+            }
+          >
+            <div className="flex space-x-1 items-center">
+              <Image
+                className="my-1 w-10"
+                src="/icons/coffee-cup.svg"
+                alt="join"
+              />
+              <p>Large Coffee</p>
+            </div>
+          </button>
+        );
+    }
+  }, [stage]);
 
   const onTipClicked = async (e: any) => {
     e.preventDefault();
     setTipingInProgress(true);
-    if (!buyCoffee.writeAsync) {
+
+    if (!buyCoffee.writeAsync || !buyLargeCoffee.writeAsync) {
       toast.error("Tiping not ready");
       setTipingInProgress(false);
       return;
     }
 
     try {
-      const pending = buyCoffee.writeAsync();
+      const pending =
+        ethers.utils.parseEther(tipAmount) >= ethers.utils.parseEther("0.003")
+          ? buyLargeCoffee.writeAsync()
+          : buyCoffee.writeAsync();
+
       toast.promise(pending, {
         pending: "Sending tip transaction",
         success: "Tip transaction sent!",
@@ -145,15 +227,9 @@ export const TipsForm: React.FC<TipsFormProps> = ({ onTipSuccess }) => {
                   />
                 </InputGroup>
               </fieldset>
-
-              <ButtonPrimary
-                type="submit"
-                text={tipingInProgress ? "Processing..." : "Tip Me"}
-                disabled={tipingInProgress ? true : false}
-              />
+              {buttonsContent}
             </div>
           </Col>
-
         </Row>
       </Form>
     </div>

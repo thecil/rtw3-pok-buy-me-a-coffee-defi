@@ -49,9 +49,26 @@ export const useContract = () => {
     const buyCoffee = useContractWrite({
         ...config,
     });
+    
+    // wagmi prepareContractWrite config for 'buyLargeCoffee'
+    const { config: largeCoffee } = usePrepareContractWrite({
+        ...contractInterface,
+        functionName: "buyLargeCoffee",
+        args: [senderName, senderMessage],
+        overrides: {
+            from: address,
+            gasLimit: "300000",
+            value: ethers.utils.parseEther(tipAmount)
+        }
+    });
+
+    const buyLargeCoffee = useContractWrite({
+        ...largeCoffee,
+    });
 
     return {
         buyCoffee,
+        buyLargeCoffee,
         getMemos,
         fetchMemos,
         isRefetching,

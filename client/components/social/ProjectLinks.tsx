@@ -14,7 +14,7 @@ export const ProjectLinks: React.FC = () => {
             </Link>
           </li>
           <li>
-            <Link href="https://goerli.etherscan.io/address/0x28cd3D2d2f00f4EE0ea2450756e6b6102a598F3c#code">
+            <Link href="https://goerli.etherscan.io/address/0xa38D568602b4D32692BdD2Ec9FcA991fFeFe0521#code">
               <a target="_blank" className="text-blue-400 text-sm">
                 Goerli Verified Contract
               </a>

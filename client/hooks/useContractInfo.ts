@@ -8,7 +8,7 @@ export interface ContractInterface {
 
 export const useContractInfo = (): ContractInterface => {   
     return {
-        addressOrName    : '0x28cd3D2d2f00f4EE0ea2450756e6b6102a598F3c',
+        addressOrName    : '0xa38D568602b4D32692BdD2Ec9FcA991fFeFe0521',
         contractInterface: abi,
         chainId          : 5
       };

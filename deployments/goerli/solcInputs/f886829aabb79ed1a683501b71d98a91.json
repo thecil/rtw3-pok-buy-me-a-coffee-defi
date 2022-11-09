@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/BuyMeACoffee.sol": {
+      "content": "//SPDX-License-Identifier: Unlicense\r\n\r\n// contracts/BuyMeACoffee.sol\r\npragma solidity ^0.8.0;\r\n\r\n// Switch this to your own contract address once deployed, for bookkeeping!\r\n// Example Contract Address on Goerli: 0xDBa03676a2fBb6711CB652beF5B7416A53c1421D\r\n\r\ncontract BuyMeACoffee {\r\n    // Event to emit when a Memo is created.\r\n    event NewMemo(\r\n        address indexed from,\r\n        uint256 timestamp,\r\n        string name,\r\n        string message\r\n    );\r\n\r\n    // Event to emit when a owner is changed\r\n    event NewOwner(address indexed newOwner);\r\n\r\n    // Memo struct.\r\n    struct Memo {\r\n        address from;\r\n        uint256 timestamp;\r\n        string name;\r\n        string message;\r\n    }\r\n\r\n    // Address of contract deployer. Marked payable so that\r\n    // we can withdraw to this address later.\r\n    address payable public owner;\r\n\r\n    // List of all memos received from coffee purchases.\r\n    Memo[] memos;\r\n\r\n    constructor() {\r\n        // Store the address of the deployer as a payable address.\r\n        // When we withdraw funds, we'll withdraw here.\r\n        owner = payable(msg.sender);\r\n    }\r\n\r\n    /**\r\n     * @dev fetches all stored memos\r\n     */\r\n    function getMemos() public view returns (Memo[] memory) {\r\n        return memos;\r\n    }\r\n\r\n    /**\r\n     * @dev buy a coffee for owner (sends an ETH tip and leaves a memo)\r\n     * @param _name name of the coffee purchaser\r\n     * @param _message a nice message from the purchaser\r\n     */\r\n    function buyCoffee(string memory _name, string memory _message)\r\n        public\r\n        payable\r\n    {\r\n        // Must accept more than 0 ETH for a coffee.\r\n        require(msg.value > 0, \"can't buy coffee for free!\");\r\n\r\n        // Add the memo to storage!\r\n        memos.push(Memo(msg.sender, block.timestamp, _name, _message));\r\n\r\n        // Emit a NewMemo event with details about the memo.\r\n        emit NewMemo(msg.sender, block.timestamp, _name, _message);\r\n    }\r\n\r\n    /**\r\n     * @dev Allow your smart contract to buyLargeCoffee for 0.003 ETH,\r\n     * @param _name name of the coffee purchaser\r\n     * @param _message a nice message from the purchaser\r\n     */\r\n    function buyLargeCoffee(string memory _name, string memory _message)\r\n        public\r\n        payable\r\n    {\r\n        // Must accept more than 0 ETH for a coffee.\r\n        require(msg.value >= 0.003 ether, \"can't buy coffee for free!\");\r\n\r\n        // Add the memo to storage!\r\n        memos.push(Memo(msg.sender, block.timestamp, _name, _message));\r\n\r\n        // Emit a NewMemo event with details about the memo.\r\n        emit NewMemo(msg.sender, block.timestamp, _name, _message);\r\n    }\r\n\r\n    /**\r\n     * @dev send the entire balance stored in this contract to the owner\r\n     */\r\n    function withdrawTips() public {\r\n        require(owner.send(address(this).balance));\r\n    }\r\n\r\n    /**\r\n     * @dev send the entire balance stored in this contract to the owner\r\n     */\r\n    function updateWithdrawAddress(address _newOwner) public {\r\n        require(msg.sender == owner, \"Only owner allowed\");\r\n        require(owner != _newOwner, \"Address should be different\");\r\n        owner = payable(_newOwner);\r\n        emit NewOwner(_newOwner);\r\n    }\r\n}\r\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 2000
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

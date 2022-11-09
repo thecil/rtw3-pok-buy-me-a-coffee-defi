@@ -14,7 +14,10 @@ contract BuyMeACoffee {
         string name,
         string message
     );
-    
+
+    // Event to emit when a owner is changed
+    event NewOwner(address indexed newOwner);
+
     // Memo struct.
     struct Memo {
         address from;
@@ -22,10 +25,10 @@ contract BuyMeACoffee {
         string name;
         string message;
     }
-    
+
     // Address of contract deployer. Marked payable so that
     // we can withdraw to this address later.
-    address payable owner;
+    address payable public owner;
 
     // List of all memos received from coffee purchases.
     Memo[] memos;
@@ -48,25 +51,37 @@ contract BuyMeACoffee {
      * @param _name name of the coffee purchaser
      * @param _message a nice message from the purchaser
      */
-    function buyCoffee(string memory _name, string memory _message) public payable {
+    function buyCoffee(string memory _name, string memory _message)
+        public
+        payable
+    {
         // Must accept more than 0 ETH for a coffee.
         require(msg.value > 0, "can't buy coffee for free!");
 
         // Add the memo to storage!
-        memos.push(Memo(
-            msg.sender,
-            block.timestamp,
-            _name,
-            _message
-        ));
+        memos.push(Memo(msg.sender, block.timestamp, _name, _message));
 
         // Emit a NewMemo event with details about the memo.
-        emit NewMemo(
-            msg.sender,
-            block.timestamp,
-            _name,
-            _message
-        );
+        emit NewMemo(msg.sender, block.timestamp, _name, _message);
+    }
+
+    /**
+     * @dev Allow your smart contract to buyLargeCoffee for 0.003 ETH,
+     * @param _name name of the coffee purchaser
+     * @param _message a nice message from the purchaser
+     */
+    function buyLargeCoffee(string memory _name, string memory _message)
+        public
+        payable
+    {
+        // Must accept more than 0 ETH for a coffee.
+        require(msg.value >= 0.003 ether, "can't buy coffee for free!");
+
+        // Add the memo to storage!
+        memos.push(Memo(msg.sender, block.timestamp, _name, _message));
+
+        // Emit a NewMemo event with details about the memo.
+        emit NewMemo(msg.sender, block.timestamp, _name, _message);
     }
 
     /**
@@ -74,5 +89,15 @@ contract BuyMeACoffee {
      */
     function withdrawTips() public {
         require(owner.send(address(this).balance));
+    }
+
+    /**
+     * @dev send the entire balance stored in this contract to the owner
+     */
+    function updateWithdrawAddress(address _newOwner) public {
+        require(msg.sender == owner, "Only owner allowed");
+        require(owner != _newOwner, "Address should be different");
+        owner = payable(_newOwner);
+        emit NewOwner(_newOwner);
     }
 }
